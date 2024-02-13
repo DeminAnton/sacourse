@@ -1,9 +1,17 @@
-import asyncio
+#import asyncio
 from typing import Annotated
 
 from sqlalchemy import String, create_engine
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.ext.asyncio import (
+    #AsyncSession,
+    async_sessionmaker,
+    create_async_engine
+    )
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    #Session,
+    sessionmaker
+    )
 
 from config import settings
 
@@ -31,7 +39,7 @@ class Base(DeclarativeBase):
 
     repr_cols_num = 3
     repr_cols = tuple()
-    
+
     def __repr__(self):
         """Relationships не используются в repr(), т.к. могут вести к неожиданным подгрузкам"""
         cols = []
