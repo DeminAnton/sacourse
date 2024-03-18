@@ -5,7 +5,7 @@ from core_api.crud import insert_user, select_user_table, update_user, delete_us
 # This import is necessary to ensure the models are loaded
 import core_api.models
 
-core = True
+core = False
 
 if __name__  == "__main__":
     if core:
@@ -23,5 +23,19 @@ if __name__  == "__main__":
         metadata.drop_all(sync_engine)
     else:
         orm_models.Base.metadata.create_all(orm_db.sync_engine)
-        input("press any key")
+        with orm_db.Session(bind=orm_db.sync_engine) as session:
+            new_user = [orm_models.User(name='Tony'), 
+                         orm_models.User(name='Xenia'), 
+                         orm_models.User(name='Mark')]
+            session.bulk_save_objects(new_user)
+            session.commit()
+            
+            user = session.query(orm_models.User).get(2)
+            users = session.query(orm_models.User).filter(orm_models.User.id > 1).all()
+            
+            print(user.__dict__)
+            print(users)
+            input("press any key")
+            session.delete(user)
+            input("press any key")
         orm_models.Base.metadata.drop_all(orm_db.sync_engine)
