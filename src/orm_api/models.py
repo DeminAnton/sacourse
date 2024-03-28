@@ -34,18 +34,24 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = "user"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
-    
+    posts: Mapped[List["Post"]] = relationship("Post", back_populates="user")
+    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="user")
+
 class Post(Base):
     __tablename__ = "posts"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(Integer) #mapped_column(ForeignKey("user.id"))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship("User", back_populates="posts")
+    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="post")
     text: Mapped[str] = mapped_column(Text)
-    
+
 class Comment(Base):
     __tablename__ = "comments"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(Integer) #mapped_column(ForeignKey("user.id"))
-    post_id: Mapped[int] = mapped_column(Integer) #mapped_column(ForeignKey("posts.id"))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship("User", back_populates="comments")
+    post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"))
+    post: Mapped["Post"] = relationship("Post", back_populates="comments")
     text: Mapped[str] = mapped_column(Text)

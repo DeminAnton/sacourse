@@ -28,5 +28,5 @@ async_engine = create_async_engine(
     echo=True,
 )
 
-session_factory = sessionmaker(sync_engine)
+session_factory = sessionmaker(bind=sync_engine)
 async_session_factory = async_sessionmaker(async_engine)
